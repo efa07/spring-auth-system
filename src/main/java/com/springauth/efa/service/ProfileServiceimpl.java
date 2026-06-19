@@ -5,7 +5,9 @@ import com.springauth.efa.io.ProfileRequest;
 import com.springauth.efa.io.ProfileResponse;
 import com.springauth.efa.repostory.UserRepostory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -18,8 +20,12 @@ public class ProfileServiceimpl implements ProfileService {
     @Override
     public ProfileResponse createProfile(ProfileRequest request){
         UserEntity newProfile = convertToUserEntity(request);
-        newProfile = userRepostory.save(newProfile);
-        return convertToProfileResponse(newProfile);
+        if(!userRepostory.existsByEmail(request.getEmail())){
+            newProfile = userRepostory.save(newProfile);
+            return convertToProfileResponse(newProfile);
+        }
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "User with same email already exists");
+
     }
 
     private ProfileResponse convertToProfileResponse(UserEntity newProfile) {

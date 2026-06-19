@@ -3,6 +3,7 @@ package com.springauth.efa.controller;
 import com.springauth.efa.io.ProfileRequest;
 import com.springauth.efa.io.ProfileResponse;
 import com.springauth.efa.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class ProfileController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProfileResponse register(@RequestBody ProfileRequest request) {
+    public ProfileResponse register(@Valid @RequestBody ProfileRequest request) {
         ProfileResponse response = profileService.createProfile(request);
         // todo: send welcome email
 
